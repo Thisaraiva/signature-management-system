@@ -1,3 +1,4 @@
+const path = require('path'); // Adicione esta linha
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -13,8 +14,11 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 
-// Import User model
-const User = require('../models/User');
+/*// Import User model
+const User = require('../models/User');*/
+
+// Caminho absoluto para o modelo User
+const User = require(path.join(__dirname, '../app/models/User'));
 
 // MongoDB connection
 const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/signature_management';

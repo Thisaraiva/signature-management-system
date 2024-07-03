@@ -18,6 +18,7 @@ services:
       - "3000:3000"
     volumes:
       - ./Projeto/BackEnd:/usr/src/app
+      - ./Projeto/models:/usr/src/app/models
     depends_on:
       - mongo
     environment:
