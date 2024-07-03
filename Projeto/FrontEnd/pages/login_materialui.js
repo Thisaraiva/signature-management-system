@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 
 const Login = () => {
   const [email, setEmail] = useState('');

@@ -13,6 +13,9 @@ RUN npm install
 # Copie todo o código fonte do aplicativo
 COPY . .
 
+# List files in the /usr/src/app/models directory
+RUN ls -la /usr/src/app/models
+
 # Exponha a porta que a aplicação irá rodar
 EXPOSE 3000
 

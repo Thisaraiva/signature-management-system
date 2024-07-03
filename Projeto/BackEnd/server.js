@@ -5,9 +5,6 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs'); // Importe o bcrypt para hash de senha
 const jwt = require('jsonwebtoken'); // Importe o jsonwebtoken para geração de tokens
 
-// Import User model
-const User = require('../models/User');
-
 const app = express();
 const port = 3000;
 
@@ -15,6 +12,9 @@ const port = 3000;
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
+
+// Import User model
+const User = require('../models/User');
 
 // MongoDB connection
 const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/signature_management';
