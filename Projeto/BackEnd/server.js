@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs'); // Importe o bcrypt para hash de senha
 const jwt = require('jsonwebtoken'); // Importe o jsonwebtoken para geração de tokens
 
 // Import User model
-const User = require('../../models/User');
+const User = require('../models/User');
 
 const app = express();
 const port = 3000;
