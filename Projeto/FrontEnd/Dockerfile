@@ -13,6 +13,9 @@ RUN npm install
 # Copie todo o código fonte do aplicativo
 COPY . .
 
+# Build the Next.js application
+RUN npm run build
+
 # Exponha a porta que a aplicação irá rodar
 EXPOSE 3000
 

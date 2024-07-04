@@ -22,7 +22,7 @@ const User = require('./models/User');
 
 // MongoDB connection
 //const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/signature_management';
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/signature_management';
+const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/signature_management';
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -33,6 +33,19 @@ mongoose.connect(mongoURI, {
   console.error('MongoDB connection error:', err);
 });
 
+mongoose.connection.on('connected', async () => {
+  console.log('Connected to MongoDB');
+
+  // Listar bancos de dados para verificar a conexão
+  try {
+    const admin = mongoose.connection.db.admin();
+    const result = await admin.listDatabases();
+    console.log('Bancos de dados disponíveis:', result.databases);
+  } catch (err) {
+    console.error('Erro ao listar bancos de dados:', err);
+  }
+});
+
 mongoose.connection.on('connected', () => {
   console.log('Connected to MongoDB');
 });
@@ -40,21 +53,6 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', (err) => {
   console.error(`Error connecting to MongoDB: ${err}`);
 });
-
-mongoose.connection.on('connected', async () => {
-  console.log('Connected to MongoDB');
-  
-  // Listar bancos de dados para verificar a conexão
-  const admin = new mongoose.mongo.Admin(mongoose.connection.db);
-  admin.listDatabases((err, result) => {
-    if (err) {
-      console.error('Erro ao listar bancos de dados:', err);
-    } else {
-      console.log('Bancos de dados disponíveis:', result.databases);
-    }
-  });
-});
-
 
 // Rota de login
 app.post('/api/login', async (req, res) => {
@@ -148,6 +146,16 @@ app.post('/api/register-employee', async (req, res) => {
     console.error('Erro durante o registro:', error);
     res.status(500).json({ message: 'Erro interno do servidor.' })
     console.log("Sucesso erro");
+  }
+});
+
+// Rota para listar todos os usuários
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao buscar usuários', error: err.message });
   }
 });
 
