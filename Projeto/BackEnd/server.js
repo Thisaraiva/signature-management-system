@@ -1,4 +1,4 @@
-const path = require('path'); // Adicione esta linha
+//const path = require('path'); // Adicione esta linha
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -14,14 +14,15 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors());
 
-/*// Import User model
-const User = require('../models/User');*/
+// Import User model
+const User = require('./models/User');
 
 // Caminho absoluto para o modelo User
-const User = require(path.join(__dirname, '../app/models/User'));
+//const User = require(path.join(__dirname, '../app/models/User'));
 
 // MongoDB connection
-const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/signature_management';
+//const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/signature_management';
+const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/signature_management';
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -39,6 +40,21 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', (err) => {
   console.error(`Error connecting to MongoDB: ${err}`);
 });
+
+mongoose.connection.on('connected', async () => {
+  console.log('Connected to MongoDB');
+  
+  // Listar bancos de dados para verificar a conexão
+  const admin = new mongoose.mongo.Admin(mongoose.connection.db);
+  admin.listDatabases((err, result) => {
+    if (err) {
+      console.error('Erro ao listar bancos de dados:', err);
+    } else {
+      console.log('Bancos de dados disponíveis:', result.databases);
+    }
+  });
+});
+
 
 // Rota de login
 app.post('/api/login', async (req, res) => {
@@ -65,7 +81,8 @@ app.post('/api/login', async (req, res) => {
 
   } catch (error) {
     console.error('Erro durante o login:', error);
-    res.status(500).json({ message: 'Erro interno do servidor.' });
+    res.status(500).json({ message: 'Erro interno do servidor.' })
+    console.log("Login erro");;
   }
 });
 
@@ -76,7 +93,8 @@ app.post('/api/register', async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email já cadastrado.' });
+      console.log(`EXSIST USER ${existingUser}`);
+      return res.status(400).json({ message: 'Email já cadastrado.' });      
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -87,7 +105,20 @@ app.post('/api/register', async (req, res) => {
 
   } catch (error) {
     console.error('Erro durante o registro:', error);
-    res.status(500).json({ message: 'Erro interno do servidor.' });
+    res.status(500).json({ message: 'Erro interno do servidor.' })
+    console.log("Registro erro");;
+  }
+});
+
+app.post('/api/users', async (req, res) => {
+  const { name, email, password,role } = req.body;
+
+  try {
+    const newUser = new User({ name, email, password, role });
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 
@@ -115,7 +146,8 @@ app.post('/api/register-employee', async (req, res) => {
     res.status(201).json({ message: 'Funcionário registrado com sucesso!' });
   } catch (error) {
     console.error('Erro durante o registro:', error);
-    res.status(500).json({ message: 'Erro interno do servidor.' });
+    res.status(500).json({ message: 'Erro interno do servidor.' })
+    console.log("Sucesso erro");
   }
 });
 
