@@ -2,18 +2,23 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router'; // Importe o useRouter do next/router
 
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter(); // Instancie o useRouter
 
   const handleSubmit = async (e) => {
+    console.log('entrou no handleSubmit');
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3000/api/login', { email, password });
       // Handle successful login
       console.log('Login successful:', response.data);
 
+      // Salvar o token no localStorage
+      localStorage.setItem('token', response.data.token);
+      console.log(`ROUTER --> ${router}`);
       // Redirecionar para a página de dashboard após o login
       router.push('/dashboard'); // Substitua '/dashboard' pela rota correta do seu projeto
     } catch (error) {

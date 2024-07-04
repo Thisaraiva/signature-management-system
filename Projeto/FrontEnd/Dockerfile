@@ -13,7 +13,7 @@ RUN npm install
 # Copie todo o código fonte do aplicativo
 COPY . .
 
-# Build the Next.js application
+# Build the Next.js application(retiraddo do rebuild)
 RUN npm run build
 
 # Exponha a porta que a aplicação irá rodar
