@@ -87,6 +87,35 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+// Rota de registro de novo funcionário
+app.post('/api/register-employee', async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  try {
+    // Verifique se o usuário já existe no banco de dados
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email já cadastrado.' });
+    }
+
+    // Hash da senha antes de salvar no banco de dados
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Cria um novo usuário com o modelo User
+    const newUser = new User({ name, email, password: hashedPassword, role });
+
+    // Salva o novo usuário no banco de dados
+    await newUser.save();
+
+    // Resposta de sucesso
+    res.status(201).json({ message: 'Funcionário registrado com sucesso!' });
+  } catch (error) {
+    console.error('Erro durante o registro:', error);
+    res.status(500).json({ message: 'Erro interno do servidor.' });
+  }
+});
+
+
 // Middleware para verificar o token JWT
 const verifyToken = (req, res, next) => {
   const token = req.header('Authorization');
