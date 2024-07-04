@@ -25,7 +25,11 @@ const mongoURI = process.env.MONGO_URI || 'mongodb://mongo:27017/signature_manag
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('MongoDB connected');
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
 });
 
 mongoose.connection.on('connected', () => {

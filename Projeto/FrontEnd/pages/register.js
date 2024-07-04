@@ -12,7 +12,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/register', { name, email, password, role });
+      const response = await axios.post('http://localhost:3000/api/register-employee', { name, email, password, role });
       console.log('Registration successful:', response.data);
 
       // Redirecionar para a página de login após o registro bem-sucedido
@@ -25,7 +25,7 @@ const Register = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-2xl text-center mb-4 font-bold">Register</h2>
+        <h2 className="text-2xl text-center mb-4 font-bold">Register Employee</h2>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
             Name
